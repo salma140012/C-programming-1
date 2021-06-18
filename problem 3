@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+
+template <class type>
+
+class node {
+public:
+  type data;
+  node<type>* next;
+};
+
+template <class type>
+
+class Stack {
+private:
+  node<type>* top;
+public:
+//default constructor
+  Stack() {
+    top = nullptr;
+
+}
+//parametrized constructor constructs a stack having‘initial_size’ elements whose values are ‘value
+Stack(type value, int intial_size){
+      top = intial_size;
+        for(int i = 0 ; i < top ; i++)
+        {
+            top = new node<type>;
+            top->next = nullptr;
+            top->data = value;
+        }
+}
+//check if the list is empty
+bool isEmpty() {
+    if (top == nullptr)
+        return false;
+    else
+        return true;
+}
+// returns the top element by reference.
+type& Top() {
+    if (top!=nullptr){
+        cout<<top->data;
+        return top->data;}
+
+    else
+        cout << "Stack is empty" << endl;
+
+}
+//returns the number of elements in the stack
+int size(){
+    int count = 0;
+    node<type>* current = top;
+    while (current != nullptr)
+    {
+        count++;
+        current = current->next;
+    }
+    cout<< count;
+    return count;
+}
+//adds an element to the top of the stack
+void push( type  value) {
+    if (top == nullptr) {
+        top = new node<type>;
+        top->next = nullptr;
+        top->data = value;
+    }
+    else {
+        node<type>* temp = new node<type>;
+        temp->data = value;
+        temp->next = top;
+        top = temp;
+    }
+}
+// removes the top element
+void pop() {
+    if (top == nullptr) {
+        cout << "Stack is empty" << endl;
+        return;
+    }
+    else {
+        cout << top->data << " is popped" << endl;
+        node<type>* temp = top;
+        top = top->next;
+        delete temp;
+    }
+}
+//print the list
+void print() {
+    node<type>* temp = top;
+    while (temp != nullptr)
+    {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+   }
+//a destructor to clear the stack and leave no memory leaks.
+~Stack(){
+
+  node<type>* next;
+
+    while (top != nullptr) {
+        next = top->next;
+        delete top;
+        top = next;
+    }
+}
+   };
+
+   int main()
+ {
+    Stack<int> s;
+
+ while (true)
+ {
+     cout << "1-Push "<<endl;
+     cout<<"2-Pop " <<endl;
+     cout<<"3-Print "<<endl;
+     cout<< "4-size " << endl;
+     cout<<"5-top element by reference"<<endl;
+     cout<<"6-Quit "<<endl;
+     int choice;
+     cin >> choice;
+     switch (choice) {
+     case(1):
+         cout << "Enter a number to push in Stack ";
+         int n;
+         cin >> n;
+         s.push(n);
+         cout<<endl;
+         break;
+     case(2):
+         s.pop();
+         cout<<endl;
+         break;
+     case(3):
+         cout<<"the list ";
+         s.print();
+         cout<<endl;
+         break;
+    case(4):
+         cout<<"size is ";
+         s.size();
+         cout<<endl;
+         break;
+    case(5):
+         cout<<"top is ";
+        s.Top();
+        cout<<endl;
+        break;
+     case(6):
+         cout << "Quitting  the program " << endl;
+         cout<<endl;
+         return 1;
+
+
+
+     default:
+         cout << "Invalid choice " << endl;
+         cout<<endl;
+         break;
+     }
+  }
+ return 0;
+ }
