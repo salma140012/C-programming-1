@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Data
+{
+   public:
+    string value;
+    int priority;
+    Data* neww;
+};
+
+class PriorityQueue
+{
+   Data* head= NULL;
+public:
+
+    void enqueue(string value, int priority)
+    {
+      Data *temp1, *temp2;
+      temp1 = new Data;
+      temp1->priority = priority;
+      temp1->value = value;
+  if (head == NULL || priority < head->priority)
+    { temp1->neww = head;
+      head = temp1;
+    }
+else
+    { temp2=head;
+    while (temp2->neww != NULL && temp2->neww->priority <= priority)
+           temp2=temp2->neww;
+           temp1->neww = temp2->neww;
+           temp2->neww = temp1;
+       }
+    }
+
+    void dequeue()
+    {cout<<head->value;
+    Data *temp2=head;
+    head=head->neww;
+    free(temp2);}
+
+    ~PriorityQueue(){delete head;}
+
+};
+int main()
+{
+   PriorityQueue q;
+    q.enqueue("world", 10);
+    q.enqueue("Hello", 5);
+    q.dequeue();
+    cout << " ";
+    q.dequeue();
+
+    return 0;
+}
