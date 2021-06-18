@@ -1,0 +1,267 @@
+#include <iostream>
+
+using namespace std;
+template<class T>
+class Node{
+public:
+         T value;
+         Node* next;
+         Node* prev;
+         Node()
+        {
+           next=NULL;
+           prev=NULL;
+        }
+        Node(T value,Node* next=0,Node* prev=0)
+        {
+            this->value=value;
+            this->next=next;
+            this->prev=prev;
+        }
+
+};
+template<class T>
+class LinkedList
+{
+private:
+    Node <T>*  head;
+    Node <T>*  tail;
+
+public:
+    class iterator
+    {
+       Node <T>*nodee;
+       friend class LinkedList;
+   public:
+    iterator()
+    {
+        nodee=NULL;
+    }
+    void operator ++ (int)
+    {
+        try{
+        iterator temp = *this;
+        nodee=nodee->next;
+        if(nodee->next=NULL)
+          {
+            throw 0;
+          }
+        }
+        catch(...)
+        {
+            cout<<"Error";
+        }
+    }
+    void operator -- (int)
+        {
+          try{
+             iterator temp = *this;
+             nodee=nodee->prev;
+             //check again
+             if(nodee->prev = tail)
+               {
+                 throw 0;
+               }
+             }
+             catch(...)
+             {
+                 cout<<"Error";
+             }
+
+        }
+        T& operator*()
+        {
+            return nodee->value;
+        }
+
+
+    };//end of the inner class iterator
+    int list_size;
+    LinkedList()
+    {
+        head=NULL;
+        tail=NULL;
+        list_size=0;
+    }
+    LinkedList(T value, int initial_size)
+    {
+        head=new Node <T> ();
+        head->value=value;
+        head->next=NULL;
+        head->prev=NULL;
+        head = tail;
+        list_size=0;
+        do
+        {
+        push_back(value);
+        initial_size--;
+        }
+        while(initial_size!=0);
+    }
+    int size()
+    {
+       return list_size+1;
+    }
+    void insert(T value, iterator position)
+    {
+         Node<T> *temp2= new Node<T>();
+        temp2->value=value;
+        if(head!=position.nodee)
+        {
+            temp2->next=position.nodee;
+            temp2->prev=position.nodee->prev;
+            position.nodee->prev->next=temp2;
+            position.nodee->prev=temp2;
+        }
+        else
+        {
+            temp2->next=head;
+            temp2->prev=NULL;
+            head->prev=temp2;
+            head=temp2;
+        }
+
+    }
+    iterator erase(iterator position)
+    {
+        if(position.nodee == head)
+        {
+            head = head->next;
+            delete head->prev;
+            head->prev = NULL;
+            list_size--;
+            position.nodee = NULL;
+            return position;
+        }
+        else if(position.nodee == tail)
+        {
+            tail = tail->prev;
+            delete tail->next;
+            tail->next = NULL;
+            position.nodee = tail;
+            list_size--;
+            return position;
+        }
+
+        else
+        {
+           Node<T> *delete_temp = position.nodee;
+           cout<<"x";
+           position.nodee->prev->next = position.nodee->next;
+           cout<<"z";
+           position.nodee->next->next = position.nodee->prev;
+           cout<<"m";
+           position.nodee= position.nodee->next;
+           cout<<"a";
+           delete_temp = NULL;
+           cout<<"b";
+           delete delete_temp;
+           list_size--;
+           return position;
+        }
+
+    }
+    LinkedList<T>& operator = (LinkedList<T> another_list)
+    {
+       iterator it = another_list.begin();
+       iterator it1 = another_list.end();
+       do
+       {
+           push_back(it.nodee->value);
+           it++;
+       }
+       while(it!= it1);
+       return *this;
+    }
+    iterator begin()
+    {
+        iterator temp;
+        temp.nodee = head;
+        return temp;
+    }
+    iterator end()
+    {
+        iterator temp1;
+        temp1.nodee = tail;
+        return temp1;
+
+    }
+
+     void push_back(T value)
+     {
+         Node<T>* node = new Node<T>();
+         node->value=value;
+         node->next=NULL;
+         node->prev-NULL;
+
+         if(head==NULL)
+         {
+             head = node;
+             tail=node;
+         }
+         else
+         {
+           tail->next=node;
+           node->next=NULL;
+           node->prev=tail;
+           tail=node;
+           list_size++;
+         }
+     }
+
+     void print()
+     {
+       Node<T>* itr = head;
+       while(itr!=NULL)
+       {
+           cout<< itr->value<<"->";
+           itr = itr->next;
+       }
+       cout<<"NULL"<<endl;
+     }
+    ~LinkedList()
+    {
+       while(head->next != NULL)
+       {
+           Node<T>* temp = head;
+           head=head->next;
+           delete temp;
+       }
+       delete head;
+    }
+};
+
+int main()
+{
+    LinkedList<int> myList;
+    myList.push_back(1);
+    myList.push_back(2);
+    myList.push_back(3);
+    myList.push_back(4);
+    myList.print();
+    cout<< myList.size()<<endl;
+
+    LinkedList<int>::iterator it = myList.begin();
+    cout<<*it<<endl;
+
+    //it++;
+    //cout<<*it<<endl;
+
+
+
+   LinkedList<int>::iterator it1 = myList.end();
+    cout<<*it1<<endl;
+
+
+
+    myList.insert(5,it);
+    myList.print();
+
+     myList.erase(it1);
+     myList.print();
+
+
+
+
+    return 0;
+}
