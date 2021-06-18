@@ -1,0 +1,239 @@
+#include <iostream>
+
+using namespace std;
+
+template <class type>
+
+class node {
+public:
+  type data;
+  node<type>* next;
+};
+
+template <class type>
+
+class Stack {
+private:
+  node<type>* top;
+public:
+//default constructor
+  Stack() {
+    top = nullptr;
+
+}
+//parametrized constructor constructs a stack having‘initial_size’ elements whose values are ‘value
+Stack(type value, int intial_size){
+      top = intial_size;
+        for(int i = 0 ; i < top ; i++)
+        {
+            top = new node<type>;
+            top->next = nullptr;
+            top->data = value;
+        }
+}
+//check if the list is empty
+bool isEmpty() {
+   return top == nullptr;
+}
+// returns the top element by reference.
+type& Top() {
+   if (!isEmpty())
+        return top->data;
+    else
+        exit(1);
+
+}
+//returns the number of elements in the stack
+int size(){
+    int count = 0;
+    node<type>* current = top;
+    while (current != nullptr)
+    {
+        count++;
+        current = current->next;
+    }
+    cout<< count;
+    return count;
+}
+//adds an element to the top of the stack
+void push( type  value) {
+    if (top == nullptr) {
+        top = new node<type>;
+        top->next = nullptr;
+        top->data = value;
+    }
+    else {
+        node<type>* temp = new node<type>;
+        temp->data = value;
+        temp->next = top;
+        top = temp;
+    }
+}
+// removes the top element
+void pop() {
+    if (top == nullptr) {
+        cout << "Stack is empty" << endl;
+        return;
+    }
+    else {
+        cout << top->data << " is popped" << endl;
+        node<type>* temp = top;
+        top = top->next;
+        delete temp;
+    }
+}
+//print the list
+void print() {
+    node<type>* temp = top;
+    while (temp != nullptr)
+    {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+   }
+
+//a destructor to clear the stack and leave no memory leaks.
+~Stack(){
+
+  node<type>* next;
+
+    while (top != nullptr) {
+        next = top->next;
+        delete top;
+        top = next;
+    }
+}
+   };
+
+// Function to check whether two characters are opening and closing of same type.
+bool  Bracket(char open, char close)
+{
+    if(open == '{' && close == '}')
+        return true;
+
+    if(open == '[' && close == ']')
+        return true;
+    if(open == '(' && close == ')')
+        return true;
+
+
+
+}
+
+//Function to check the whole string validation.
+bool Valid(string str)
+{
+    Stack<char>check;
+    bool flag = false;
+    for(int i = 0 ; i < str.size() ; i++)
+    {
+        if(!flag && str[i] != '*')
+        {
+            if(str[i]=='(' || str[i] == '{' || str[i] == '[')
+            {
+                check.push(str[i]);
+            }
+
+            else if((str[i]=='/') && (str[i+1]=='*'))
+            {
+                check.push(str[i]);
+                check.push(str[i+1]);
+                i+=2;
+                flag = true;
+            }
+            else if(str[i]==')' || str[i] == '}' || str[i] == ']')
+            {
+
+                if((check.isEmpty()) || !Bracket(check.Top(), str[i]) )
+                    return false;
+                else
+                    check.pop();
+            }
+        }
+
+        else if((i+1 != str.size())&& (str[i]=='*') && (str[i+1]=='/') )
+        {
+            if(!check.isEmpty() && check.Top() == str[i])
+            {
+                check.pop();
+                check.pop();
+                i++;
+                flag = false;
+            }
+            else
+                return false;
+        }
+
+    }
+    if (!check.isEmpty()) return false;
+
+    return true;
+}
+
+   int main()
+ {
+      Stack<string> s;
+
+ while (true)
+ {
+     cout << "1-Push "<<endl;
+     cout<<"2-Pop " <<endl;
+     cout<< "3-size " << endl;
+     cout<<"4-Bracket closed and valid"<<endl;
+     cout<<"5-Print"<<endl;
+     cout<<"6-Quit "<<endl;
+     int choice;
+     cin >> choice;
+     string n;
+     switch (choice) {
+     case(1):
+         cout << "Enter  string to push in Stack ";
+         cin >> n;
+         s.push(n);
+         cout<<endl;
+         break;
+     case(2):
+         s.pop();
+         cout<<endl;
+         break;
+
+    case(3):
+         cout<<"size is ";
+         s.size();
+         cout<<endl;
+         break;
+    case(5):
+        cout<<"the list ";
+         s.print();
+         cout<<endl;
+         break;
+
+    case(6):
+         cout << "Quitting  the program " << endl;
+         cout<<endl;
+         return 1;
+
+
+
+     default:
+         cout << "Invalid choice " << endl;
+         cout<<endl;
+         break;
+    case(4):
+       string str;
+   cout << "Enter your string : "<<endl;
+   cin >> str;
+   if(Valid(str))
+       cout << "Valid"<<endl;
+   else
+        cout << "InValid"<<endl;
+        break;
+
+     }
+  }
+ return 0;
+ }
+
+
+
+
